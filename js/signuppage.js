@@ -5,7 +5,7 @@ const signupPage = express.Router();
 require('dotenv').config();
 // body parser
 const bodyParser = require('body-parser');
-loginPage.use(bodyParser.urlencoded({ extended: true }));
+signupPage.use(bodyParser.urlencoded({ extended: true }));
 //server mongoose
 const mongoose = require('mongoose');
 //password hatcher
@@ -29,7 +29,7 @@ const sessionMiddleware = require("./sessionMiddleware");
 signupPage.use(sessionMiddleware);
 
 
-signupPage.get("/signUpPage", (req, res) => {
+signupPage.get("/sign-up-page", (req, res) => {
     if (req.session.loggedin) {
         // res.redirect('newBlogPage')  ============================Change this later=====================================
     } else {
@@ -41,23 +41,23 @@ signupPage.get("/signUpPage", (req, res) => {
 let emailExistError = false;
 let passwordErrorMsg = "";
 //Sign Up
-    app.post("/sign-up", async (req, res, next) => {//Post needs to be the same as the file page location
+    signupPage.post("/sign-up", async (req, res, next) => {//Post needs to be the same as the file page location
         try {   //Checks for unique password
                 if (req.body.password != req.body.confirmPassword ) {
                     passwordErrorMsg = "Password and Confirm Password do not match";
-                    res.redirect("signUp");
+                    res.redirect("sign-up-page");
                     return;
                 } else if(req.body.password.search(/[a-z]/) < 0){
                     passwordErrorMsg = "Password must contain atleast one lowercase letter";
-                    res.redirect("signUp");
+                    res.redirect("sign-up-page");
                     return;
                 } else if (req.body.password.search(/[A-Z]/) < 0) {
                     passwordErrorMsg = "Password must contain atleast one upercase letter";
-                    res.redirect("signUp");
+                    res.redirect("sign-up-page");
                     return;
                 } else if (req.body.password.search(/[0-9]/) < 0) {
                     passwordErrorMsg = "Password must contain atleast one number";
-                    res.redirect("signUp");
+                    res.redirect("sign-up-page");
                     return;
                 }
 
@@ -75,12 +75,12 @@ let passwordErrorMsg = "";
             if (!usersEmail) {
                     const result = await users.save();//Uploads users Data to database
                     console.log(result);
-                    res.redirect("logIn");
+                    res.redirect("loginPage");
                     emailExistError = false;
                 } else {
                     console.log("Error: Email already exist");
                     emailExistError = true;
-                    res.redirect("signUp");
+                    res.redirect("sign-up-page");
                 }
         } catch (err) {
             console.log("err");
@@ -89,3 +89,4 @@ let passwordErrorMsg = "";
             };
     });
 
+module.exports = signupPage;
