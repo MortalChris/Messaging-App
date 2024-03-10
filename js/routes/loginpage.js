@@ -24,10 +24,10 @@ const db = mongoose.connection;
 db.on("error", console.error.bind(console, "mongo connection error"));
 
 //Schema for login details // Import Users Model
-const UsersModel = require("./usersSchemaModel");
+const UsersModel = require("../components/usersSchemaModel");
 
 //Import express session middleware
-const sessionMiddleware = require("./sessionMiddleware");
+const sessionMiddleware = require("../components/sessionMiddleware");
 loginPage.use(sessionMiddleware);
 
 //Route

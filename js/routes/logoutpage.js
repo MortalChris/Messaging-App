@@ -2,7 +2,7 @@
 const express = require('express')
 // const app = express();
 const logOutPage = express.Router();
-const sessionMiddleware = require("./sessionMiddleware");
+const sessionMiddleware = require("../components/sessionMiddleware");
 logOutPage.use(sessionMiddleware);
 
 logOutPage.get("/logout-page", (req, res) => {

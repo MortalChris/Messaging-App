@@ -13,10 +13,10 @@ app.set('view engine', 'html');
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Routes
-const homepageRouter = require("./js/homepage");
-const signUpPageRouter = require("./js/signupPage");
-const loginPageRouter = require("./js/loginpage");
-const logOutPageRouter = require("./js/logoutpage");
+const homepageRouter = require("./js/routes/homepage");
+const signUpPageRouter = require("./js/routes/signuppage");
+const loginPageRouter = require("./js/routes/loginpage");
+const logOutPageRouter = require("./js/routes/logoutpage");
 
 app.use("/", homepageRouter);
 app.use("/", loginPageRouter);
