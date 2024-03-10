@@ -22,7 +22,7 @@ const bcryptjs = require('bcryptjs');
     db.on("error", console.error.bind(console, "mongo connection error"));
 
 //Schema for login details // Import Users Model
-const UsersModel = require("./usersModelSchema");
+const UsersModel = require("./usersSchemaModel");
 
 //Import express session middleware
 const sessionMiddleware = require("./sessionMiddleware");
