@@ -31,7 +31,7 @@ const sessionMiddleware = require("./sessionMiddleware");
 loginPage.use(sessionMiddleware);
 
 //Route
-loginPage.get("/loginPage", (req, res) => {
+loginPage.get("/login-page", (req, res) => {
     if (req.session.loggedin) {
         // res.redirect('newBlogPage')  ============================Change this later=====================================
     } else {
@@ -52,11 +52,11 @@ loginPage.post("/loginPage", async function(req, res){
 				req.session.username = usersEmail;
                 // res.redirect("newBlogPage");  ============================Change this later=====================================
             } else {
-                res.redirect("loginPage");
+                res.redirect("login-page");
                 console.log("password doesn't match");
             }
         } else { //  if the user doesn't exist 
-            res.redirect("loginPage");
+            res.redirect("login-page");
             console.log("User doesn't exist");
         }
     } catch (error) { 
