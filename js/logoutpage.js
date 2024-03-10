@@ -6,7 +6,11 @@ const sessionMiddleware = require("./sessionMiddleware");
 logOutPage.use(sessionMiddleware);
 
 logOutPage.get("/logout-page", (req, res) => {
-    res.render('logOutPage');
+    if (req.session.loggedin) {
+        res.render('logOutPage');
+    } else {
+        res.redirect('homepage');
+    }
 });
 
 logOutPage.post("/logOutPage", async function (req, res) { 
