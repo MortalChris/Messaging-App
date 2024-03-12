@@ -17,11 +17,13 @@ const homepageRouter = require("./js/routes/homepage");
 const signUpPageRouter = require("./js/routes/signuppage");
 const loginPageRouter = require("./js/routes/loginpage");
 const logOutPageRouter = require("./js/routes/logoutpage");
+const chatPageRouter = require("./js/routes/chatpage");
 
 app.use("/", homepageRouter);
 app.use("/", loginPageRouter);
 app.use("/", logOutPageRouter);
 app.use("/", signUpPageRouter);
+app.use("/", chatPageRouter);
 
 
 app.listen(port, () => {
