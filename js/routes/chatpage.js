@@ -15,11 +15,6 @@ mongoose.connect('mongodb://localhost:27017/messaging-app', {
 //Catches mongodb connection error
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "mongo connection error"));
-//Socket.io
-const { createServer } = require('node:http');
-const { Server } = require('socket.io');
-const server = createServer(chatPage);
-const io = new Server(server);
 
 
 //Route
@@ -31,10 +26,6 @@ chatPage.get("/chat-page", (req, res) => {
     // } else {
     //     res.redirect('homepage');
     // }
-});
-
-io.on('connection', (socket) => {
-    console.log('a user connected');
 });
 
 module.exports = chatPage;
