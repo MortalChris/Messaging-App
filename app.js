@@ -25,13 +25,6 @@ app.use("/", signUpPageRouter);
 app.use("/", chatPageRouter);
 
 
-//Socket
-// const http = require('http');
-// const socketIO = require('socket.io');
-// const server = http.createServer(app);
-// const io = socketIO(server);
-// // Attach the Socket.IO instance to the Express app
-// app.io = io;
 
 const { createServer } = require('node:http');
 const { Server } = require('socket.io');
@@ -40,15 +33,9 @@ const io = new Server(server);
 
 io.on('connection', (socket) => {
     console.log('user connected');
-
-    // socket.on('message', data => {
-    //     console.log(data);
-    //     io.emit("message", `${socket.id.substring(0,5)} :${data}`)
-    // })
-
-    // socket.on('chat message', (msg) => {
-    //     console.log('message: ' + msg);
-    // });
+    socket.on('chat message', (msg) => {
+        io.emit('chat message', msg);
+    });
 
     socket.on('disconnect', function () {
         console.log('user disconnected');
@@ -59,3 +46,22 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
     console.log(`Example app listening on port http://localhost:${port}/homepage`);
 });
+
+
+
+// socket.on('message', data => {
+//     console.log(data);
+//     io.emit("message", `${socket.id.substring(0,5)} :${data}`)
+// })
+
+// socket.on('chat message', (msg) => {
+//     console.log('message: ' + msg);
+// });
+
+//Socket
+// const http = require('http');
+// const socketIO = require('socket.io');
+// const server = http.createServer(app);
+// const io = socketIO(server);
+// // Attach the Socket.IO instance to the Express app
+// app.io = io;
