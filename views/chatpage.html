@@ -20,22 +20,22 @@
                 <input type="text" id="input" name="message" id="message-input-chat" placeholder="Type your message here" required>
                 <button name="send-msg">Send</button>
             </form> -->
-            <form id="form" >
-                <input type="text" id="input" name="message" placeholder="Type your message here" required>
+<!--  ---------------------------------->
+            <form id="form" action="">
+                <input type="text" id="input" name="message" placeholder="Type your message here" autocomplete="off" required>
                 <button name="send-msg">Send</button>
             </form>            
-            <ol id="messages"></ol>
-
+            <ul id="messages"></ul>
+<!--  --------------------------------->
         </div>
-        <div id="chat-container">
+        <!-- <div id="chat-container">
             <ul>
                 <%  data.forEach(function(data){%>
                     <li><%= data.message%></li>
                 <% }) %>
             </ul>
-        </div>
-        <a href="logOut">Log Out</a>
-
+        </div> -->
+<!--  ----------------------------------->
         <script src="/socket.io/socket.io.js"></script>
         <script>
         const socket = io();
@@ -55,9 +55,11 @@
         socket.on('chat message', (msg) => {
             const item = document.createElement('li');
             item.textContent = msg;
+            console.log(msg);
             messages.appendChild(item);
             window.scrollTo(0, document.body.scrollHeight);
         });
         </script>
+<!-------------------------------------  -->
     </body>
 </html>
