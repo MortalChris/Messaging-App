@@ -4,17 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Homepage</title>
-    <link rel="stylesheet" href="css/homepage.css">
+    <title>Chat Page</title>
+    <link rel="stylesheet" href="css/chatpage.css">
 </head>
     <body>
-        <div>
-            <h1>This is chat page</h1>
-            <a href="login-page">Login</a>
-            <a href="logout-page">LogOut</a>
+        <div id="heading-container">
+            <div>
+                <a href="login-page">Login</a>
+                <a href="logout-page">LogOut</a>
+                <h1>Chat</h1>
+            </div>
         </div>
+        <div id="form-container">
+            <!-- <form id="chat-form" id="form" action="/chat" method="POST">
+                <input type="text" id="input" name="message" id="message-input-chat" placeholder="Type your message here" required>
+                <button name="send-msg">Send</button>
+            </form> -->
+            <form id="form" >
+                <input type="text" id="input" name="message" placeholder="Type your message here" required>
+                <button name="send-msg">Send</button>
+            </form>            
+            <ol id="messages"></ol>
 
-        <footer>Made by Christian A. Valeri</footer>
-        <script src=""></script>
+        </div>
+        <div id="chat-container">
+            <ul>
+                <%  data.forEach(function(data){%>
+                    <li><%= data.message%></li>
+                <% }) %>
+            </ul>
+        </div>
+        <a href="logOut">Log Out</a>
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+        const socket = io();
+
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+        const messages = document.getElementById('messages');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (input.value) {
+                socket.emit('chat message', input.value);
+                input.value = '';
+            }
+        });
+
+        socket.on('chat message', (msg) => {
+            const item = document.createElement('li');
+            item.textContent = msg;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+        </script>
     </body>
 </html>
