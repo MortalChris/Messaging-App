@@ -22,7 +22,7 @@ chatPage.use(sessionMiddleware);
 
 
 //Schema
-const ChatModel = mongoose.model('Messages', new mongoose.Schema({
+const ChatModel = mongoose.model('Messages', new mongoose.Schema({         //might need to removed
     // Define your data schema here
     // email: { type: String, required: true},
     message: { type: String, required: true }
@@ -54,7 +54,7 @@ chatPage.get("/chat-page", async (req, res) => {
 });
 
 
-// chatPage.post("/chat", async (req, res, next) => {
+// chatPage.post("/chat", async (req, res, next) => {           //might need to removed
 //     const messages = new ChatModel({
 //         // email: req.session.username.email,
 //         message: req.body.message
