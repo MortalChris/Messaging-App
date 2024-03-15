@@ -37,7 +37,8 @@ chatPage.get("/chat-page", async (req, res) => {
         const data = await ChatModel.find({}).exec();
         // data is an array of objects, not a single object!
         res.render('chatpage', {
-            data: data
+            data: data,
+            userName: sessionMiddleware.username //Might need to remove this later
         });
         // if (req.session.loggedin) {
         // res.render('chatpage', {
