@@ -32,13 +32,27 @@ const server = createServer(app);
 const io = new Server(server);
 
 io.on('connection', (socket) => {
-    console.log('user connected');
+    console.log(`user ${socket.id.substring(0, 5)} connected`);
+    //When a user connects (to everyone but user)
+    socket.broadcast.emit('message', `User ${socket.id.substring(0, 5)} connected`);
+
+    //When a user connects (only to user)
+    socket.emit('message', 'Welcome to the chat room!')
+
     socket.on('chat message', (msg) => {
         io.emit('chat message', msg);
     });
 
+    
     socket.on('disconnect', function () {
-        console.log('user disconnected');
+        console.log(`User ${socket.id.substring(0, 5)} disconnected`);
+        //When a user disconnects (to everyone but user)
+        socket.broadcast.emit('message', `User ${socket.id.substring(0, 5)} disconnected`);
+    });
+
+    //Listens for activity (to everyone but user)
+    socket.on('activity', (name) => {
+        socket.broadcast.emit('activity', name);
     });
 })
 
