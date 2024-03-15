@@ -16,27 +16,16 @@
             </div>
         </div>
         <div id="form-container">
-            <!-- <form id="chat-form" id="form" action="/chat" method="POST">
-                <input type="text" id="input" name="message" id="message-input-chat" placeholder="Type your message here" required>
-                <button name="send-msg">Send</button>
-            </form> -->
-<!--  ---------------------------------->
             <form id="form" action="">
                 <input type="text" id="input" name="message" placeholder="Type your message here" autocomplete="off" required>
                 <button name="send-msg">Send</button>
-            </form>            
+            </form>
             <ul id="messages"></ul>
             <p id="activity"></p>
-<!--  --------------------------------->
+
+            <!-- <p id="username" value="<%= userName %>"></p> -->
         </div>
-        <!-- <div id="chat-container">
-            <ul>
-                <%  data.forEach(function(data){%>
-                    <li><%= data.message%></li>
-                <% }) %>
-            </ul>
-        </div> -->
-<!--  ----------------------------------->
+
         <script src="/socket.io/socket.io.js"></script>
         <script>
         const socket = io();
@@ -45,8 +34,9 @@
         const input = document.getElementById('input');
         const messages = document.getElementById('messages');
         const activity = document.getElementById('activity');
+        // const username = document.getElementById('username');
 
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', (e) => {//Emits typed text in input
             e.preventDefault();
             if (input.value) {
                 socket.emit('chat message', input.value);
@@ -54,7 +44,8 @@
             }
         });
 
-        socket.on('chat message', (msg) => {
+        socket.on('chat message', (msg) => {//connects typed text to server and displays it
+            activity.textContent = "";//Wipes activity text content
             const item = document.createElement('li');
             item.textContent = msg;
             console.log(msg);
@@ -62,10 +53,21 @@
             window.scrollTo(0, document.body.scrollHeight);
         });
 
-        input.addEventListener('keypress', () => {
+    //Handles displaying if other user is typing
+        input.addEventListener('keypress', () => {//Displays if other user is typing on key press
             socket.emit('activity', socket.id.substring(0,5))
         })
+
+        let activityTimer
+        socket.on('activity', (name) => {//Displays if other user is typing
+                activity.textContent = name + ` is typing...`;
+
+                // Clears activity after 3 seconds
+                clearTimeout(activityTimer)
+                    activityTimer = setTimeout(() =>{
+                        activity.textContent = '';
+                    }, 3000);
+        });
         </script>
-<!-------------------------------------  -->
     </body>
 </html>
