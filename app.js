@@ -10,6 +10,9 @@ app.set('views', path.join(__dirname, 'views')); //sets the directory where Expr
 app.set('view engine', 'html');// sets the default view engine to use when rendering views (In this case its set to html)
 //Public Routes (css)
 app.use(express.static(path.join(__dirname, 'public')));
+//Import express session middleware
+const sessionMiddleware = require("./js/components/sessionMiddleware");
+app.use(sessionMiddleware);
 
 //Routes
 const homepageRouter = require("./js/routes/homepage");
@@ -43,7 +46,6 @@ io.on('connection', (socket) => {
         io.emit('chat message', msg);
     });
 
-    
     socket.on('disconnect', function () {
         console.log(`User ${socket.id.substring(0, 5)} disconnected`);
         //When a user disconnects (to everyone but user)
@@ -60,22 +62,3 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
     console.log(`Example app listening on port http://localhost:${port}/homepage`);
 });
-
-
-
-// socket.on('message', data => {
-//     console.log(data);
-//     io.emit("message", `${socket.id.substring(0,5)} :${data}`)
-// })
-
-// socket.on('chat message', (msg) => {
-//     console.log('message: ' + msg);
-// });
-
-//Socket
-// const http = require('http');
-// const socketIO = require('socket.io');
-// const server = http.createServer(app);
-// const io = socketIO(server);
-// // Attach the Socket.IO instance to the Express app
-// app.io = io;
