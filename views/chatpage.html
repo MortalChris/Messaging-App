@@ -65,8 +65,7 @@
             }
         })
 
-
-        chatForm.addEventListener('submit', (e) => {//Emits typed text in input
+        function createRoom(e){
             e.preventDefault();
             if (input.value) {
                 socket.emit('chat message', {
@@ -75,7 +74,9 @@
                 });
                 input.value = '';
             }
-        });
+        }
+
+        chatForm.addEventListener('submit', createRoom);
 
 
         //Welcome message on connection
