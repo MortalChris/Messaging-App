@@ -35,12 +35,24 @@ const server = createServer(app);
 const io = new Server(server);
 
 io.on('connection', (socket) => {
+    connectionStateRecovery: {}
     console.log(`user ${socket.id.substring(0, 5)} connected`);
+
+    //Join room
+    socket.on('enterRoom', ({ name, room }) => {
+        // Join the room
+        socket.join(room);
+        console.log(`User ${name} has joined room ${room}`);
+        // Optionally, send a confirmation back to the client
+        socket.emit('message', `You have joined room ${room}`);
+    });
+
+    //When a user connects (only to user)
+        socket.emit('message', `Welcome to the chat!`)
+
     //When a user connects (to everyone but user)
     socket.broadcast.emit('message', `User ${socket.id.substring(0, 5)} connected`);
 
-    //When a user connects (only to user)
-    socket.emit('message', 'Welcome to the chat room!')
 
     socket.on('chat message', (msg) => {
         io.emit('chat message', msg);
