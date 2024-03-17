@@ -15,6 +15,9 @@
                 <h1>Chat</h1>
             </div>
         </div>
+        <div id="chat-list-contianer">
+            <ul id="chat-list"></ul>
+        </div>
         <div id="form-container">
             <form id="form" action="">
                 <input type="text" id="input" name="message" placeholder="Type your message here" autocomplete="off" required>
@@ -23,8 +26,10 @@
             <ul id="messages"></ul>
             <p id="activity"></p>
 
-            <!-- <p id="username" value="<%= userName %>"></p> -->
+            <p id="username"><%= userName %></p>
         </div>
+
+
 
         <script src="/socket.io/socket.io.js"></script>
         <script>
@@ -34,7 +39,13 @@
         const input = document.getElementById('input');
         const messages = document.getElementById('messages');
         const activity = document.getElementById('activity');
-        // const username = document.getElementById('username');
+        const username = document.getElementById('username');
+        const chatList = document.getElementById('chat-list');
+
+        function enterRoom(e){
+            e.preventDefault();
+            if(username.textContent && )
+        }
 
         form.addEventListener('submit', (e) => {//Emits typed text in input
             e.preventDefault();
@@ -59,8 +70,8 @@
         })
 
         let activityTimer
-        socket.on('activity', (name) => {//Displays if other user is typing
-                activity.textContent = name + ` is typing...`;
+        socket.on('activity', () => {//Displays if other user is typing
+                activity.textContent = username.textContent + ` is typing...`;
 
                 // Clears activity after 3 seconds
                 clearTimeout(activityTimer)
@@ -69,5 +80,8 @@
                     }, 3000);
         });
         </script>
+
+
+
     </body>
 </html>
