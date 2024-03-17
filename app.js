@@ -32,7 +32,10 @@ app.use("/", chatPageRouter);
 const { createServer } = require('node:http');
 const { Server } = require('socket.io');
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    connectionStateRecovery: {}//temporarily store all the events that are sent by the server and will try to restore the state of a client when it reconnects
+});
+
 
 io.on('connection', (socket) => {
     connectionStateRecovery: {}
@@ -48,14 +51,15 @@ io.on('connection', (socket) => {
     });
 
     //When a user connects (only to user)
-        socket.emit('message', `Welcome to the chat!`)
+    socket.emit('message', `Welcome to the chat!`)
 
     //When a user connects (to everyone but user)
     socket.broadcast.emit('message', `User ${socket.id.substring(0, 5)} connected`);
 
-
-    socket.on('chat message', (msg) => {
-        io.emit('chat message', msg);
+    //Sending a message
+    socket.on('chat message', ({ msg, room }) => {
+        io.to(room).emit('chat message', msg);
+        console.log(`Sent message in room: ${room}. Msg: ${msg}`);
     });
 
     socket.on('disconnect', function () {
