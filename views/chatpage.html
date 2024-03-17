@@ -61,7 +61,7 @@
                     name: username.textContent,
                     room: chatRoom.value
                 })   
-                chatRoom.value = '';
+                // chatRoom.value = '';
             }
         })
 
@@ -69,7 +69,10 @@
         chatForm.addEventListener('submit', (e) => {//Emits typed text in input
             e.preventDefault();
             if (input.value) {
-                socket.emit('chat message', input.value);
+                socket.emit('chat message', {
+                    msg:input.value, 
+                    room: chatRoom.value
+                });
                 input.value = '';
             }
         });
