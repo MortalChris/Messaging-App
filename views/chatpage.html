@@ -34,7 +34,7 @@
             <ul id="messages"></ul>
             <p id="activity"></p>
 
-            <p id="username"><%= userName %></p><!-- Here to pass express session username to html/js -->
+            <p id="username" hidden><%= userName %></p><!-- Here to pass express session username to html/js -->
         </div>
 
 
@@ -54,6 +54,14 @@
         const chatRoom = document.getElementById('room-name-input');//Input of naming room
         const createRoom = document.getElementById('create-room-form');
 
+        //Welcome message on connection
+        socket.on('message', (msg)=>{
+            const item = document.createElement('li');
+            item.textContent = msg;
+            messages.appendChild(item);
+        })
+
+        //Creates a room
         createRoom.addEventListener('submit', (e) => {
             e.preventDefault();
             if(username.textContent && chatRoom.value){
@@ -65,33 +73,35 @@
             }
         })
 
-        function createRoom(e){
+
+        chatForm.addEventListener('submit', (e) => {//Emits typed text in input
             e.preventDefault();
             if (input.value) {
                 socket.emit('chat message', {
                     msg:input.value, 
-                    room: chatRoom.value
+                    room: chatRoom.value,
+                    username: username.textContent
                 });
                 input.value = '';
             }
-        }
-
-        chatForm.addEventListener('submit', createRoom);
+        });
 
 
-        //Welcome message on connection
-        socket.on('message', (msg)=>{
-            const item = document.createElement('li');
-            item.textContent = msg;
-            messages.appendChild(item);
-        })
-
-        socket.on('chat message', (msg) => {//connects typed text to server and displays it
+        socket.on('chat message', ({msg, username}) => {//connects typed text to server and displays it
             activity.textContent = "";//Wipes activity text content
+            const itemDiv = document.createElement('div');
+
             const item = document.createElement('li');
             item.textContent = msg;
             console.log(msg);
-            messages.appendChild(item);
+
+            const itemUsername = document.createElement('li');
+            itemUsername.textContent = username;
+            console.log(username);
+
+            itemDiv.appendChild(itemUsername);
+            itemDiv.appendChild(item);
+            messages.appendChild(itemDiv);
             window.scrollTo(0, document.body.scrollHeight);
         });
 
