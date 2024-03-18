@@ -57,8 +57,8 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('message', `User ${socket.id.substring(0, 5)} connected`);
 
     //Sending a message
-    socket.on('chat message', ({ msg, room }) => {// grabs submitted room and submitted message
-        io.to(room).emit('chat message', msg);
+    socket.on('chat message', ({ msg, room, username }) => {// grabs submitted room and submitted message
+        io.to(room).emit('chat message', { msg, username });
         console.log(`Sent message in room: ${room}. Msg: ${msg}`);
     });
 
