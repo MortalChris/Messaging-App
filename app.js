@@ -39,7 +39,7 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
     connectionStateRecovery: {}
-    console.log(`user ${socket.id.substring(0, 5)} connected`);
+    console.log(`user ${sessionMiddleware.username} connected`); //${socket.id.substring(0, 5)}
 
     //Join room
     socket.on('enterRoom', ({ name, room }) => {
@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
     socket.emit('message', `Welcome to the chat!`)
 
     //When a user connects (to everyone but user)
-    socket.broadcast.emit('message', `User ${socket.id.substring(0, 5)} connected`);
+    socket.broadcast.emit('message', `User ${sessionMiddleware.username} connected`); //${socket.id.substring(0, 5)}
 
     //Sending a message
     socket.on('chat message', ({ msg, room, username }) => {// grabs submitted room and submitted message
