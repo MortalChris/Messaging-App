@@ -38,7 +38,7 @@ chatPage.get("/chat-page", async (req, res) => {
         // data is an array of objects, not a single object!
         res.render('chatpage', {
             data: data,
-            userName: sessionMiddleware.username //Might need to remove this later
+            userName: "sessionMiddleware.username" //Might need to remove this later
         });
         // if (req.session.loggedin) {
         // res.render('chatpage', {
