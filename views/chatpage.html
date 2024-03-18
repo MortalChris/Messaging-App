@@ -89,13 +89,13 @@
 
         socket.on('chat message', ({msg, username}) => {//connects typed text to server and displays it
             activity.textContent = "";//Wipes activity text content
-            const itemDiv = document.createElement('div');
+            const itemDiv = document.createElement('div');//container div for messages/username/
 
-            const item = document.createElement('li');
+            const item = document.createElement('li');//messages
             item.textContent = msg;
             console.log(msg);
 
-            const itemUsername = document.createElement('li');
+            const itemUsername = document.createElement('li');//username
             itemUsername.textContent = username;
             console.log(username);
 
@@ -108,7 +108,7 @@
 
     //Handles displaying if other user is typing
         input.addEventListener('keypress', () => {//Displays if other user is typing on key press
-            socket.emit('activity', username.textContent)//socket.id.substring(0,5)
+            socket.emit('activity', {name: username.textContent, room: chatRoom.value})//socket.id.substring(0,5)
         })
 
         let activityTimer
