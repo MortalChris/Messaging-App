@@ -63,15 +63,26 @@
 
         //Creates a room
         createRoom.addEventListener('submit', (e) => {
+            joinRoom(e, chatRoom.value);
+            //Adds a list of rooms joined
+            const roomJoinedItem = document.createElement('button');
+            roomJoinedItem.textContent = chatRoom.value;
+            chatList.appendChild(roomJoinedItem);
+                roomJoinedItem.addEventListener('click', (e)=>{
+                    joinRoom(e, roomJoinedItem.textContent);
+                })
+        })
+
+        function joinRoom(e, chatRoomValue){
             e.preventDefault();
             if(username.textContent && chatRoom.value){
                 socket.emit('enterRoom',{
                     name: username.textContent,
-                    room: chatRoom.value
+                    room: chatRoomValue
                 })   
                 // chatRoom.value = '';
             }
-        })
+        }
 
 
         chatForm.addEventListener('submit', (e) => {//Emits typed text in input
