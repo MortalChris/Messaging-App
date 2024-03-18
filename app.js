@@ -69,8 +69,8 @@ io.on('connection', (socket) => {
     });
 
     //Listens for activity (to everyone but user)
-    socket.on('activity', (name) => {//these name things might be uneccessary now
-        socket.broadcast.emit('activity', name);
+    socket.on('activity', ({ name, room }) => {//these name things might be uneccessary now
+        socket.broadcast.to(room).emit('activity', name);
     });
 })
 
