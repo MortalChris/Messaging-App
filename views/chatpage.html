@@ -64,7 +64,7 @@
         //Creates a room
         createRoom.addEventListener('submit', (e) => {
             joinRoom(e, chatRoom.value);
-            //Adds a list of rooms joined
+            //Adds a list of rooms joined so you can rejoin them
             const roomJoinedItem = document.createElement('button');
             roomJoinedItem.textContent = chatRoom.value;
             chatList.appendChild(roomJoinedItem);
