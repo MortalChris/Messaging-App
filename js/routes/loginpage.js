@@ -2,7 +2,7 @@
 const express = require('express')
 // const app = express();
 const loginPage = express.Router();
-// Express session
+//dotenv
 require('dotenv').config();
 // body parser
 const bodyParser = require('body-parser');
