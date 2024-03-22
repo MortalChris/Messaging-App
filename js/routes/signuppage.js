@@ -13,7 +13,7 @@ const bcryptjs = require('bcryptjs');
 
 //Mongo/Mongoose stuff
     // Connect to MongoDB
-    mongoose.connect('mongodb://localhost:27017/messaging-app', {
+    mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {
         // useNewUrlParser: true,
         // useUnifiedTopology: true
     }, console.log("connected to database"));
