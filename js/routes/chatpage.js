@@ -5,6 +5,10 @@ const chatPage = express.Router();
 // body parser
 const bodyParser = require('body-parser');
 chatPage.use(bodyParser.urlencoded({ extended: true }));
+//dotenv
+require('dotenv').config()
+
+
 //server mongoose
     const mongoose = require('mongoose');
     // Connect to MongoDB
