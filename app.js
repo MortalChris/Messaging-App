@@ -87,10 +87,13 @@ io.on('connection', async (socket) => {
     //Sending a message
     socket.on('chat message', async ({ msg, room, username }) => {// grabs submitted room and submitted message
         // const data = await ChatModel.find({}).exec();
-        const foundUser = await ChatModel.findOne({ chat.username: username });//needs to grab the room
-         data.forEach(data => {
-            io.to(data.room).emit('chat message', { msg: data.msg, username: data.username });
-        });
+        const chatUsername = chat.username;
+        const foundUser = await ChatModel.findOne({ chatUsername: username });//needs to grab the room/////////////////////////////////////////
+        if(foundUser){
+            data.forEach(data => {
+                io.to(data.room).emit('chat message', { msg: data.msg, username: data.username });
+            });
+        }
         // io.to(room).emit('chat message', { msg, username }); // Broadcast the message to all connected clients
         console.log(`Sent message in room: ${room}. Msg: ${msg}`);
     });    
