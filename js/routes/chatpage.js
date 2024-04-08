@@ -24,15 +24,8 @@ require('dotenv').config()
 const sessionMiddleware = require("../components/sessionMiddleware");
 chatPage.use(sessionMiddleware);
 
-
-//Schema
-const ChatModel = mongoose.model('Messages', new mongoose.Schema({         //might need to removed
-    // Define your data schema here
-    // email: { type: String, required: true},
-    message: { type: String, required: true }
-    // Add more fields as needed
-}));
-
+//Import chatroom schema
+const ChatModel = require("../components/chatRoomSchemaModel");
 
 //Route
 chatPage.get("/chat-page", async (req, res) => {
