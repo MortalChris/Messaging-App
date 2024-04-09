@@ -38,6 +38,22 @@ app.use("/", chatPageRouter);
     //Import chatroom schema
     const ChatModel = require("./js/components/chatRoomSchemaModel");
 
+    
+//note to self I made need to comment/delete the chat message socket emit.
+    const changeStream = ChatModel.watch();
+    // Listen for changes in the 'Chat' collection
+    changeStream.on('change', (change) => {
+     switch (next.operationType) {
+        case 'insert':
+            io.to(next.fullDocument.room).emit('new message', change.fullDocument);
+            console.log(next.fullDocument.message);
+            break;
+        case 'update':
+            io.to(next.fullDocument.room).emit('chat message', next.updateDescription.updatedFields.message);
+            console.log(next.updateDescription.updatedFields.message);
+        }
+    });
+
 
 //Socket IO
 const { createServer } = require('node:http');
@@ -62,16 +78,16 @@ io.on('connection', async (socket) => {
 
 
     ///When connected to server pulls in data
-    try{
-        const getRoom = await ChatModel.find({ messages: sessionMiddleware.username }).exec();
-        if(getRoom){
-            getRoom.forEach(data => {
-                socket.emit('userData', {room: data.chat.room ,messages: data.chat.message, timestamp: data.chat.timestamp, username: data.chat.username });
-            })
-        }
-    }catch (error){
-        console.error('Error fetching room data:', error);
-    }
+    // try{
+    //     const getRoom = await ChatModel.find({ messages: sessionMiddleware.username }).exec();
+    //     if(getRoom){
+    //         getRoom.forEach(data => {
+    //             socket.emit('userData', {room: data.chat.room ,messages: data.chat.message, timestamp: data.chat.timestamp, username: data.chat.username });
+    //         })
+    //     }
+    // }catch (error){
+    //     console.error('Error fetching room data:', error);
+    // }
     /////////////
 
 
