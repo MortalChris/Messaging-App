@@ -60,12 +60,12 @@
         })
 
         //Displays Data from mongoDB
-        socket.on('userData', function(data) {
-            if(data){
-                displayChat(data);
-                joinRoom(e, data.room); //////////////////////////////////////////////This is the seond call of joinRoom
-            }
-        });
+        // socket.on('userData', function(data) {
+        //     if(data){
+        //         displayChat(data);
+        //         joinRoom(e, data.room); //////////////////////////////////////////////This is the seond call of joinRoom
+        //     }
+        // });
 
         //disconnect
         socket.emit('disconnect', {room: chatRoom.value, username: username.textContent});
