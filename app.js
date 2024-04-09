@@ -87,12 +87,10 @@ io.on('connection', async (socket) => {
         const result = await chat.save();
 
         // Join the room
-        data.forEach(data => {
             socket.join(data.room);
-            console.log(`User ${data.username} has joined room ${data.room}`);
+            console.log(`User ${username} has joined room ${room}`);
             // Optionally, send a confirmation back to the client
-            socket.emit('message', `You have joined room ${data.room}`);
-        });
+            socket.emit('message', `You have joined room ${room}`);
     });
 
 
