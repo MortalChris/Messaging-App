@@ -53,21 +53,18 @@ io.on('connection', async (socket) => {
     console.log(`user ${sessionMiddleware.username} connected`); //${socket.id.substring(0, 5)}
     const data = await ChatModel.find({}).exec();//if this doesn't work move inside enter room socket, remove async from io.on
 
+
     //Join room
     socket.on('enterRoom', async ({ username, room }) => {
-        // const chat = new ChatRoomModal({//Uploads to database
-        //     room: room,
-        //     username: username,
-        //     message: msg
-        // });
         const chat = new ChatRoomModal({//Uploads to database
             room: room,
-            chat:{ 
-                username: username,
-                message: msg
+            messages:{ 
+                username: username
+                // message: msg
             }
         });
         const result = await chat.save();
+        
         // Join the room
         data.forEach(data => {
             socket.join(data.room);
@@ -77,21 +74,24 @@ io.on('connection', async (socket) => {
         });
     });
 
+
     //When a user connects (only to user)
     socket.emit('message', `Welcome to the chat!`)
-
     //When a user connects (to everyone but user)
     socket.broadcast.emit('message', `User ${sessionMiddleware.username} connected`); //${socket.id.substring(0, 5)}
 
 
     //Sending a message
     socket.on('chat message', async ({ msg, room, username }) => {// grabs submitted room and submitted message
-        // const data = await ChatModel.find({}).exec();
-        const chatUsername = chat.username;
-        const foundUser = await ChatModel.findOne({ chatUsername: username });//needs to grab the room/////////////////////////////////////////
-        if(foundUser){
-            data.forEach(data => {
-                io.to(data.room).emit('chat message', { msg: data.msg, username: data.username });
+        // Find the chat room by room name
+        const chatRoom = await ChatModel.findOne({ room: room });
+
+        if(chatRoom){
+            chatRoom.messages.push({ username, message: msg });// adds messages and username to model
+            await chatRoom.save(); // Save the updated chat room
+
+            chatRoom.forEach(data => {
+                io.to(data.room).emit('chat message', { msg: data.chat.message, username: data.chat.username });
             });
         }
         // io.to(room).emit('chat message', { msg, username }); // Broadcast the message to all connected clients
@@ -99,11 +99,13 @@ io.on('connection', async (socket) => {
     });    
 
 
+    //On disconnect
     socket.on('disconnect', function ({room, username}) {
         console.log(`User ${username} disconnected`);////socket.id.substring(0, 5)}
         //When a user disconnects (to everyone but user)
         socket.broadcast.to(room).emit('message', `User ${username} disconnected`);//socket.id.substring(0, 5)}
     });
+
 
     //Listens for activity (to everyone but user)
     socket.on('activity', ({ name, room }) => {//these name things might be uneccessary now
