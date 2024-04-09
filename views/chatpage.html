@@ -59,6 +59,14 @@
             messages.appendChild(item);
         })
 
+        //Displays Data from mongoDB
+        socket.on('userData', function(data) {
+            if(data){
+                displayChat(data);
+                joinRoom(e, data.room); //////////////////////////////////////////////This is the seond call of joinRoom
+            }
+        });
+
         //disconnect
         socket.emit('disconnect', {room: chatRoom.value, username: username.textContent});
 
@@ -66,11 +74,11 @@
         createRoom.addEventListener('submit', (e) => {
             joinRoom(e, chatRoom.value);
             //Adds a list of rooms joined so you can rejoin them
-            const roomJoinedItem = document.createElement('button');
+            const roomJoinedItem = document.createElement('button');////////////////////////////////////////////////////////////
             roomJoinedItem.textContent = chatRoom.value;
             chatList.appendChild(roomJoinedItem);
                 roomJoinedItem.addEventListener('click', (e)=>{
-                    joinRoom(e, roomJoinedItem.textContent);
+                    joinRoom(e, roomJoinedItem.textContent);/////////////////////////////This is the first call of joinRoom
                 })
         })
 
@@ -101,6 +109,13 @@
         // socket.on('chat message', ({msg, username}) =>
         socket.on('chat message', ({msg, username}) => {//connects typed text to server and displays it
             data.forEach(chatData => {
+                displayChat(chatData);//////////////////////////////Future me, this is the 2nd time we call this function
+            });
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        //Function that displays chat messages
+        function displayChat(data){
                 activity.textContent = "";//Wipes activity text content
                 const itemDiv = document.createElement('div');//container div for messages/username/
 
@@ -115,10 +130,7 @@
                 itemDiv.appendChild(itemUsername);
                 itemDiv.appendChild(item);
                 messages.appendChild(itemDiv);
-                
-            });
-            window.scrollTo(0, document.body.scrollHeight);
-        });
+        }
 
 
     //Handles displaying if other user is typing
