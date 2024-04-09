@@ -44,8 +44,8 @@ app.use("/", chatPageRouter);
     // Listen for changes in the 'ChatModel' collection
     changeStream.on('change', (change) => {
      switch (next.operationType) {
-        case 'insert':
-            io.to(next.fullDocument.room).emit('new message', change.fullDocument);
+        case 'insert'://msg: data.chat.message, username: data.chat.username
+            io.to(next.fullDocument.room).emit('new message', change.fullDocument);//this says new mesage
             console.log(next.fullDocument.message);
             break;
         case 'update':
