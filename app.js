@@ -41,7 +41,7 @@ app.use("/", chatPageRouter);
 
 //note to self I made need to comment/delete the chat message socket emit.
     const changeStream = ChatModel.watch();
-    // Listen for changes in the 'Chat' collection
+    // Listen for changes in the 'ChatModel' collection
     changeStream.on('change', (change) => {
      switch (next.operationType) {
         case 'insert':
