@@ -49,9 +49,30 @@ const io = new Server(server, {
 
 
 io.on('connection', async (socket) => {
-    connectionStateRecovery: {}
+    const connectionStateRecovery = {};n
     console.log(`user ${sessionMiddleware.username} connected`); //${socket.id.substring(0, 5)}
-    const data = await ChatModel.find({}).exec();//if this doesn't work move inside enter room socket, remove async from io.on
+
+    
+    try {//if this doesn't work move inside enter room socket, remove async from io.on
+        const data = await ChatModel.find({}).exec();
+        // Assuming you want to do something with 'data' here
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+
+
+    ///When connected to server pulls in data
+    try{
+        const getRoom = await ChatModel.find({ messages: sessionMiddleware.username }).exec();
+        if(getRoom){
+            getRoom.forEach(data => {
+                socket.emit('userData', {room: data.chat.room ,messages: data.chat.message, timestamp: data.chat.timestamp, username: data.chat.username });
+            })
+        }
+    }catch (error){
+        console.error('Error fetching room data:', error);
+    }
+    /////////////
 
 
     //Join room
@@ -64,7 +85,7 @@ io.on('connection', async (socket) => {
             }
         });
         const result = await chat.save();
-        
+
         // Join the room
         data.forEach(data => {
             socket.join(data.room);
