@@ -38,7 +38,7 @@ app.use("/", chatPageRouter);
     //Import chatroom schema
     const ChatModel = require("./js/components/chatRoomSchemaModel");
 
-    
+
 //note to self I made need to comment/delete the chat message socket emit.
     const changeStream = ChatModel.watch();
     // Listen for changes in the 'Chat' collection
@@ -103,7 +103,7 @@ io.on('connection', async (socket) => {
         const result = await chat.save();
 
         // Join the room
-            socket.join(data.room);
+            socket.join(data.room);/////////////////////////////////////////////////////////////////this may need to be removed
             console.log(`User ${username} has joined room ${room}`);
             // Optionally, send a confirmation back to the client
             socket.emit('message', `You have joined room ${room}`);
@@ -126,7 +126,7 @@ io.on('connection', async (socket) => {
             await chatRoom.save(); // Save the updated chat room
 
             chatRoom.forEach(data => {
-                io.to(data.room).emit('chat message', { msg: data.chat.message, username: data.chat.username });
+                io.to(data.room).emit('chat message', { msg: data.chat.message, username: data.chat.username });/////////////////may need to be removed
             });
         }
         // io.to(room).emit('chat message', { msg, username }); // Broadcast the message to all connected clients
