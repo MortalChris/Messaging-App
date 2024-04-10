@@ -75,7 +75,7 @@ let passwordErrorMsg = "";
             if (!usersEmail) {
                     const result = await users.save();//Uploads users Data to database
                     console.log(result);
-                    res.redirect("loginPage");
+                    res.redirect("login-page");
                     emailExistError = false;
                 } else {
                     console.log("Error: Email already exist");

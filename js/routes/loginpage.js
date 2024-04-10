@@ -49,8 +49,8 @@ loginPage.post("/loginPage", async function(req, res){
             if (comparePass) { //if email and password matches logs in
                 console.log(req.session)
                 req.session.loggedin = true;
-				req.session.username = usersEmail;
-                // res.redirect("newBlogPage");  ============================Change this later=====================================
+                req.session.username = usersEmail;
+                res.redirect("chat-page");
             } else {
                 res.redirect("login-page");
                 console.log("password doesn't match");
@@ -61,7 +61,7 @@ loginPage.post("/loginPage", async function(req, res){
         }
     } catch (error) { 
         console.log(error)
-        res.redirect("error");
+        res.redirect("homepage");
     } 
 }); 
 
