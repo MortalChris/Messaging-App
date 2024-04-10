@@ -56,7 +56,7 @@ io.on('connection', (socket) => {
     //When a user connects (to everyone but user)
     socket.broadcast.emit('message', `User ${sessionMiddleware.username} connected`); //${socket.id.substring(0, 5)}
 
-
+    
     //Sending a message
     socket.on('chat message', ({ msg, room, username }) => {// grabs submitted room and submitted message
         io.to(room).emit('chat message', { msg, username }); // Broadcast the message to all connected clients
