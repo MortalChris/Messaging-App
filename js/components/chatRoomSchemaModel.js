@@ -5,7 +5,7 @@ const ChatRoomModal = mongoose.model('ChatRoom', new mongoose.Schema({
     // Define your data schema here
     room: { type: String, required: true },
     messages: [{
-        username: { type: String, required: true },
+        sender: { type: String, required: true },
         message: { type: String, required: true },
         timestamp: { type: Date, default: Date.now }
     }]
