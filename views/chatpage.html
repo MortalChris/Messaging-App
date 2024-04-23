@@ -69,7 +69,7 @@
             //Adds a list of rooms joined so you can rejoin them
             const roomJoinedItem = document.createElement('button');
             roomJoinedItem.textContent = chatRoom.value;
-            
+
             chatList.appendChild(roomJoinedItem);
                 roomJoinedItem.addEventListener('click', (e)=>{
                     joinRoom(e, roomJoinedItem.textContent);
@@ -88,7 +88,7 @@
             }
         }
 
-
+        //Sends chat messsage to server
         chatForm.addEventListener('submit', (e) => {//Emits typed text in input
             e.preventDefault();
             if (input.value) {
