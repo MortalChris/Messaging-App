@@ -69,6 +69,16 @@
             messages.appendChild(item);
         })
 
+        //On connection will display chat messages and room btns
+        socket.emit('connect', async () => {       
+            const chatRoom = await ChatRoomModal.findOne({ room: chatRoom.value });
+                if (chatRoom) {
+                    createMessageDisplay(chatRoom);
+                } else {
+                    console.error(`Chat room not found in 'chat message socket (client)'`);
+                }
+        });
+
         //disconnect
         socket.emit('disconnect', {room: chatRoom.value, username: username.textContent});
 
@@ -113,9 +123,37 @@
 
         //connects typed text to server and displays it
         socket.on('chat message', async ({msg, username}) => {
-            const chatRoom = await ChatRoomModal.findOne({ room: chatRoom.value });
+            createMessageDisplayClient(msg, username);
+            // const chatRoom = await ChatRoomModal.findOne({ room: chatRoom.value });
+            // if (chatRoom) {
+                //createMessageDisplay(chatRoom);
+            // } else {
+            //     console.error(`Chat room not found in 'chat message socket (client)'`);
+            // }
 
-            chatRoom.messages.forEach((chatData => {//data.forEach
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        function createMessageDisplayClient(msg, username){
+                activity.textContent = "";//Wipes activity text content
+                const itemDiv = document.createElement('div');//container div for messages/username/
+
+                const item = document.createElement('li');//messages
+                item.textContent = message;
+                console.log(message);
+
+                const itemSender = document.createElement('li');//username
+                itemSender.textContent = username;
+                console.log(username);
+
+                itemDiv.appendChild(itemSender);
+                itemDiv.appendChild(item);
+                messages.appendChild(itemDiv);
+        }
+
+
+        function createMessageDisplay(chatRoom){
+            chatRoom.messages.forEach(chatData => {//data.forEach
                 activity.textContent = "";//Wipes activity text content
                 const itemDiv = document.createElement('div');//container div for messages/username/
 
@@ -131,9 +169,8 @@
                 itemDiv.appendChild(item);
                 messages.appendChild(itemDiv);
                 
-            });
-            window.scrollTo(0, document.body.scrollHeight);
-        });
+            })
+        }
 
 
         //Handles displaying if other user is typing
