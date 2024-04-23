@@ -65,15 +65,18 @@
         //Creates a room
         createRoom.addEventListener('submit', (e) => {
             joinRoom(e, chatRoom.value);
+
             //Adds a list of rooms joined so you can rejoin them
             const roomJoinedItem = document.createElement('button');
             roomJoinedItem.textContent = chatRoom.value;
+            
             chatList.appendChild(roomJoinedItem);
                 roomJoinedItem.addEventListener('click', (e)=>{
                     joinRoom(e, roomJoinedItem.textContent);
                 })
         })
 
+        //Seperate function to create/join room
         function joinRoom(e, chatRoomValue){
             e.preventDefault();
             if(username.textContent && chatRoom.value){
@@ -98,8 +101,8 @@
             }
         });
 
-        // socket.on('chat message', ({msg, username}) =>
-        socket.on('chat message', ({msg, username}) => {//connects typed text to server and displays it
+        //connects typed text to server and displays it
+        socket.on('chat message', ({msg, username}) => {
             data.forEach(chatData => {
                 activity.textContent = "";//Wipes activity text content
                 const itemDiv = document.createElement('div');//container div for messages/username/
