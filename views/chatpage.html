@@ -74,6 +74,7 @@
             const chatRoom = await ChatRoomModal.findOne({ room: chatRoom.value });
                 if (chatRoom) {
                     createMessageDisplay(chatRoom);
+                    createRoomButtons(chatRoom.room)
                 } else {
                     console.error(`Chat room not found in 'chat message socket (client)'`);
                 }
@@ -85,16 +86,20 @@
         //Creates a room
         createRoom.addEventListener('submit', (e) => {
             joinRoom(e, chatRoom.value);
+            createRoomButtons(chatRoom.value);
 
+        })
+
+        function createRoomButtons(value){
             //Adds a list of rooms joined so you can rejoin them
             const roomJoinedItem = document.createElement('button');
-            roomJoinedItem.textContent = chatRoom.value;
-
+            roomJoinedItem.textContent = value;
             chatList.appendChild(roomJoinedItem);
-                roomJoinedItem.addEventListener('click', (e)=>{
-                    joinRoom(e, roomJoinedItem.textContent);
-                })
-        })
+
+            roomJoinedItem.addEventListener('click', (e)=>{
+                joinRoom(e, roomJoinedItem.textContent);
+            })
+        }
 
         //Seperate function to create/join room
         function joinRoom(e, chatRoomValue){
