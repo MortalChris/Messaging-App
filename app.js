@@ -55,26 +55,25 @@ io.on('connection', async (socket) => {
 
     //Join room
     socket.on('enterRoom', async ({ username, room }) => {
-        // const chat = new ChatRoomModal({//Uploads to database
-        //     room: room,
-        //     username: username,
-        //     message: msg
-        // });
-        const chat = new ChatRoomModal({//Uploads to database
-            room: room,
-            chat:{ 
-                username: username,
-                message: msg
-            }
-        });
-        const result = await chat.save();
+        // Check if the room exists
+        let chatRoom = await ChatRoomModal.findOne({ roomId: room }).exec();
+        if(!chatRoom){//If chatRoom doesnt exist make one
+            const chat = new ChatRoomModal({//Uploads to database
+                room: room,
+                messages:{ 
+                    sender: username
+                }
+            });
+            await chat.save();
+        }
+
         // Join the room
-        data.forEach(data => {
-            socket.join(data.room);
-            console.log(`User ${data.username} has joined room ${data.room}`);
+        // data.forEach(data => {
+            socket.join(room);//data.room
+            console.log(`User ${data.sender} has joined room ${room}`);//data.room
             // Optionally, send a confirmation back to the client
-            socket.emit('message', `You have joined room ${data.room}`);
-        });
+            socket.emit('message', `You have joined room ${room}`);//data.room
+        // });
     });
 
     //When a user connects (only to user)
@@ -86,15 +85,19 @@ io.on('connection', async (socket) => {
 
     //Sending a message
     socket.on('chat message', async ({ msg, room, username }) => {// grabs submitted room and submitted message
-        // const data = await ChatModel.find({}).exec();
-        const chatUsername = chat.username;
-        const foundUser = await ChatModel.findOne({ chatUsername: username });//needs to grab the room/////////////////////////////////////////
-        if(foundUser){
-            data.forEach(data => {
-                io.to(data.room).emit('chat message', { msg: data.msg, username: data.username });
-            });
+
+        const findRoom = await ChatModel.findOne({ roomId: room });
+
+        if(findRoom){
+            //Adds messages to array object
+            chatRoom.messages.push({ sender: username, message: msg, timestamp: new Date() });
+            await chatRoom.save();
+
+            // data.forEach(data => {
+            //     io.to(data.room).emit('chat message', { msg: data.msg, sender: data.sender });
+            // });
         }
-        // io.to(room).emit('chat message', { msg, username }); // Broadcast the message to all connected clients
+        io.to(room).emit('chat message', { msg, username }); // Broadcast the message to all connected clients
         console.log(`Sent message in room: ${room}. Msg: ${msg}`);
     });    
 
