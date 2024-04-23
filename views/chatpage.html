@@ -43,6 +43,16 @@
         <script>
         const socket = io();
 
+        //server mongoose
+        const mongoose = require('mongoose');
+        // Connect to MongoDB
+        mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {}, console.log("connected to database"));
+        //Catches mongodb connection error
+        const db = mongoose.connection;
+        db.on("error", console.error.bind(console, "mongo connection error"));
+        //Import chatroom schema
+        const ChatModel = require("./js/components/chatRoomSchemaModel");
+
         const chatForm = document.getElementById('chat-form');//form to submit messages
         const input = document.getElementById('input');//inout for messages
         const messages = document.getElementById('messages'); //message ul list
@@ -102,20 +112,22 @@
         });
 
         //connects typed text to server and displays it
-        socket.on('chat message', ({msg, username}) => {
-            data.forEach(chatData => {
+        socket.on('chat message', async ({msg, username}) => {
+            const chatRoom = await ChatRoomModal.findOne({ room: chatRoom.value });
+
+            chatRoom.messages.forEach((chatData => {//data.forEach
                 activity.textContent = "";//Wipes activity text content
                 const itemDiv = document.createElement('div');//container div for messages/username/
 
                 const item = document.createElement('li');//messages
-                item.textContent = chatData.msg;
-                console.log(chatData.msg);
+                item.textContent = chatData.message;
+                console.log(chatData.message);
 
-                const itemUsername = document.createElement('li');//username
-                itemUsername.textContent = chatData.username;
-                console.log(chatData.username);
+                const itemSender = document.createElement('li');//username
+                itemSender.textContent = chatData.sender;
+                console.log(chatData.sender);
 
-                itemDiv.appendChild(itemUsername);
+                itemDiv.appendChild(itemSender);
                 itemDiv.appendChild(item);
                 messages.appendChild(itemDiv);
                 
@@ -124,7 +136,7 @@
         });
 
 
-    //Handles displaying if other user is typing
+        //Handles displaying if other user is typing
         input.addEventListener('keypress', () => {//Displays if other user is typing on key press
             socket.emit('activity', {name: username.textContent, room: chatRoom.value})//socket.id.substring(0,5)
         })
@@ -140,8 +152,5 @@
                     }, 3000);
         });
         </script>
-
-
-
     </body>
 </html>
