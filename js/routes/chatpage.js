@@ -31,10 +31,10 @@ const ChatModel = require("../components/chatRoomSchemaModel");
 chatPage.get("/chat-page", async (req, res) => {
     try {
         //Using model it finds the data in mongodb
-        const data = await ChatModel.find({}).exec();
+        const chatRoom = await ChatModel.find({}).exec();
         // data is an array of objects, not a single object!
         res.render('chatpage', {
-            data: data,
+            chatRoom: chatRoom ,
             userName: "sessionMiddleware.username" //Might need to remove this later
         });
         // if (req.session.loggedin) {
