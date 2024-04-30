@@ -28,6 +28,17 @@ app.use("/", signUpPageRouter);
 app.use("/", chatPageRouter);
 
 
+//server mongoose
+    const mongoose = require('mongoose');
+    // Connect to MongoDB
+    mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {}, console.log("connected to database"));
+    //Catches mongodb connection error
+    const db = mongoose.connection;
+    db.on("error", console.error.bind(console, "mongo connection error"));
+    //Import chatroom schema
+    const ChatModel = require("./js/components/chatRoomSchemaModel");
+
+
 //Socket IO
 const { createServer } = require('node:http');
 const { Server } = require('socket.io');
@@ -37,17 +48,32 @@ const io = new Server(server, {
 });
 
 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
     connectionStateRecovery: {}
     console.log(`user ${sessionMiddleware.username} connected`); //${socket.id.substring(0, 5)}
+    const data = await ChatModel.find({}).exec();//if this doesn't work move inside enter room socket, remove async from io.on
 
     //Join room
-    socket.on('enterRoom', ({ name, room }) => {
+    socket.on('enterRoom', async ({ username, room }) => {
+        // Check if the room exists
+        let chatRoom = await ChatRoomModal.findOne({ roomId: room }).exec();
+        if(!chatRoom){//If chatRoom doesnt exist make one
+            const chat = new ChatRoomModal({//Uploads to database
+                room: room,
+                messages:{ 
+                    sender: username
+                }
+            });
+            await chat.save();
+        }
+
         // Join the room
-        socket.join(room);
-        console.log(`User ${name} has joined room ${room}`);
-        // Optionally, send a confirmation back to the client
-        socket.emit('message', `You have joined room ${room}`);
+        // data.forEach(data => {
+            socket.join(room);//data.room
+            console.log(`User ${data.sender} has joined room ${room}`);//data.room
+            // Optionally, send a confirmation back to the client
+            socket.emit('message', `You have joined room ${room}`);//data.room
+        // });
     });
 
     //When a user connects (only to user)
@@ -58,16 +84,28 @@ io.on('connection', (socket) => {
 
     
     //Sending a message
-    socket.on('chat message', ({ msg, room, username }) => {// grabs submitted room and submitted message
+    socket.on('chat message', async ({ msg, room, username }) => {// grabs submitted room and submitted message
+
+        const findRoom = await ChatModel.findOne({ roomId: room });
+
+        if(findRoom){
+            //Adds messages to array object
+            chatRoom.messages.push({ sender: username, message: msg, timestamp: new Date() });
+            await chatRoom.save();
+
+            // data.forEach(data => {
+            //     io.to(data.room).emit('chat message', { msg: data.msg, sender: data.sender });
+            // });
+        }
         io.to(room).emit('chat message', { msg, username }); // Broadcast the message to all connected clients
         console.log(`Sent message in room: ${room}. Msg: ${msg}`);
     });    
 
 
-    socket.on('disconnect', function () {
-        console.log(`User ${socket.id.substring(0, 5)} disconnected`);
+    socket.on('disconnect', function ({room, username}) {
+        console.log(`User ${username} disconnected`);////socket.id.substring(0, 5)}
         //When a user disconnects (to everyone but user)
-        socket.broadcast.emit('message', `User ${socket.id.substring(0, 5)} disconnected`);
+        socket.broadcast.to(room).emit('message', `User ${username} disconnected`);//socket.id.substring(0, 5)}
     });
 
     //Listens for activity (to everyone but user)

@@ -24,24 +24,17 @@ require('dotenv').config()
 const sessionMiddleware = require("../components/sessionMiddleware");
 chatPage.use(sessionMiddleware);
 
-
-//Schema
-const ChatModel = mongoose.model('Messages', new mongoose.Schema({         //might need to removed
-    // Define your data schema here
-    // email: { type: String, required: true},
-    message: { type: String, required: true }
-    // Add more fields as needed
-}));
-
+//Import chatroom schema
+const ChatModel = require("../components/chatRoomSchemaModel");
 
 //Route
 chatPage.get("/chat-page", async (req, res) => {
     try {
         //Using model it finds the data in mongodb
-        const data = await ChatModel.find({}).exec();
+        const chatRoom = await ChatModel.find({}).exec();
         // data is an array of objects, not a single object!
         res.render('chatpage', {
-            data: data,
+            chatRoom: chatRoom ,
             userName: "sessionMiddleware.username" //Might need to remove this later
         });
         // if (req.session.loggedin) {
