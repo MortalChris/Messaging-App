@@ -25,12 +25,14 @@
         </div>
         <div id="chat-list-contianer">
             <ul id="chat-list"></ul>
-            <%  chatRoom.messages.forEach(function(message){%>
-                <ul class="message">
-                    <p><%= message.sender %>:<%= message.message %></p>
-                    <p><%= message.timestamp.toLocaleString() %></p>
-                </ul>
-            <% }) %>
+            <% if (chatRoom.messages) { %>
+                <% chatRoom.messages.forEach(function(message){ %>
+                    <ul class="message">
+                        <p><%= message.sender %>:<%= message.message %></p>
+                        <p><%= message.timestamp.toLocaleString() %></p>
+                    </ul>
+                <% }) %>
+            <% } %>
         </div>
         <div id="form-container">
             <form id="chat-form" action="">
