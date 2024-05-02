@@ -51,15 +51,6 @@
         <script>
         const socket = io();
 
-        // //server mongoose
-        // const mongoose = require('mongoose');
-        // // Connect to MongoDB
-        // mongoose.connect(process.env.MONGODB_CONNECTION_STRING, {}, console.log("connected to database"));
-        // //Catches mongodb connection error
-        // const db = mongoose.connection;
-        // db.on("error", console.error.bind(console, "mongo connection error"));
-        // //Import chatroom schema
-        // const ChatModel = require("./js/components/chatRoomSchemaModel");
 
         const chatForm = document.getElementById('chat-form');//form to submit messages
         const input = document.getElementById('input');//inout for messages
