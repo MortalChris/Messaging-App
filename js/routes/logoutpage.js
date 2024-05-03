@@ -17,6 +17,7 @@ logOutPage.post("/logOutPage", async function (req, res) {
     req.session.loggedin = false;
     req.session.username = "";
     res.redirect("logout-page");
+    console.log("Successfully Logged out");
     console.log(req.session.loggedin);
 })
 
