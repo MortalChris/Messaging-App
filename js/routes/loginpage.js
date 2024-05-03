@@ -50,7 +50,7 @@ loginPage.post("/loginPage", async function(req, res){
                 console.log(req.session)
                 req.session.loggedin = true;
 				req.session.username = usersEmail;
-                // res.redirect("newBlogPage");  ============================Change this later=====================================
+                res.redirect("chat-page");
             } else {
                 res.redirect("login-page");
                 console.log("password doesn't match");
