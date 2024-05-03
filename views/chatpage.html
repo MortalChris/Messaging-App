@@ -10,10 +10,10 @@
     <body>
         <div id="modal">
             <form id="create-room-form" action="">
-                <label for="Room-name">Room name</label>
+                <label id="room-name-label" for="room-name-input">Room name</label>
                 <input id="room-name-input" type="text" required>
                 <button name="submit-room-name">Create</button>
-            </form>
+            </form> 
         </div>
 
         <div id="heading-container">
@@ -68,28 +68,18 @@
             messages.appendChild(item);
         })
 
-        //On connection will display chat messages and room btns
-        // socket.emit('connect', async () => {       
-        //     const chatRoom = await ChatRoomModal.findOne({ room: chatRoom.value });
-        //         if (chatRoom) {
-        //             createMessageDisplay(chatRoom);
-        //             createRoomButtons(chatRoom.room)
-        //         } else {
-        //             console.error(`Chat room not found in 'chat message socket (client)'`);
-        //         }
-        // });
 
         //disconnect
-        socket.emit('disconnect', {room: chatRoom.value, username: username.textContent});
+        socket.emit('user disconnect', {room: chatRoom.value, username: username.textContent});
 
         //Creates a room
         createRoom.addEventListener('submit', (e) => {
-            joinRoom(e, chatRoom.value);
+            e.preventDefault();
+            joinRoom(chatRoom.value);
             createRoomButtons(chatRoom.value);
-
         })
 
-        function createRoomButtons(value){
+        function createRoomButtons( value){//////////////////////////////////////Needs to use ejs to do this later
             //Adds a list of rooms joined so you can rejoin them
             const roomJoinedItem = document.createElement('button');
             roomJoinedItem.textContent = value;
@@ -101,8 +91,7 @@
         }
 
         //Seperate function to create/join room
-        function joinRoom(e, chatRoomValue){
-            e.preventDefault();
+        function joinRoom(chatRoomValue){
             if(username.textContent && chatRoom.value){
                 socket.emit('enterRoom',{
                     username: username.textContent,
@@ -125,15 +114,15 @@
             }
         });
 
-        //connects typed text to server and displays it
+        // connects typed text to server and displays it
         // socket.on('chat message', async ({msg, username}) => { //I Don't think this is needed anymore if were just gonna pull from mongodb directly
         //     createMessageDisplayClient(msg, username);
-        //     // const chatRoom = await ChatRoomModal.findOne({ room: chatRoom.value });
-        //     // if (chatRoom) {
-        //         //createMessageDisplay(chatRoom);
-        //     // } else {
-        //     //     console.error(`Chat room not found in 'chat message socket (client)'`);
-        //     // }
+        //     const chatRoom = await ChatRoomModal.findOne({ room: chatRoom.value });
+        //     if (chatRoom) {
+        //         createMessageDisplay(chatRoom);
+        //     } else {
+        //         console.error(`Chat room not found in 'chat message socket (client)'`);
+        //     }
 
         //     window.scrollTo(0, document.body.scrollHeight);
         // });
