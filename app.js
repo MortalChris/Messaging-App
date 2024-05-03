@@ -56,9 +56,9 @@ io.on('connection', async (socket) => {
     //Join room
     socket.on('enterRoom', async ({ username, room }) => {
         // Check if the room exists
-        let chatRoom = await ChatRoomModal.findOne({ roomId: room }).exec();
+        let chatRoom = await ChatModel.findOne({ roomId: room }).exec();
         if(!chatRoom){//If chatRoom doesnt exist make one
-            const chat = new ChatRoomModal({//Uploads to database
+            const chat = new ChatModel({//Uploads to database
                 room: room,
                 messages:{ 
                     sender: username
@@ -87,22 +87,27 @@ io.on('connection', async (socket) => {
     socket.on('chat message', async ({ msg, room, username }) => {// grabs submitted room and submitted message
 
         const findRoom = await ChatModel.findOne({ roomId: room });
-
-        if(findRoom){
-            //Adds messages to array object
-            chatRoom.messages.push({ sender: username, message: msg, timestamp: new Date() });
-            await chatRoom.save();
-
-            // data.forEach(data => {
-            //     io.to(data.room).emit('chat message', { msg: data.msg, sender: data.sender });
-            // });
+        console.log("findRoom =" + findRoom)
+        try {
+            if(findRoom){
+                //Adds messages to array object
+                findRoom.messages.push({ sender: username, message: msg, timestamp: new Date() });
+                await chatRoom.save();
+                console.log(findRoom);
+                // data.forEach(data => {
+                //     io.to(data.room).emit('chat message', { msg: data.msg, sender: data.sender });
+                // });
+            }
+        } catch {
+            console.log("An error has occured with submitting room")
         }
+
         io.to(room).emit('chat message', { msg, username }); // Broadcast the message to all connected clients
         console.log(`Sent message in room: ${room}. Msg: ${msg}`);
     });    
 
 
-    socket.on('disconnect', function ({room, username}) {
+    socket.on('user disconnect', function ({room, username}) {
         console.log(`User ${username} disconnected`);////socket.id.substring(0, 5)}
         //When a user disconnects (to everyone but user)
         socket.broadcast.to(room).emit('message', `User ${username} disconnected`);//socket.id.substring(0, 5)}
