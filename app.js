@@ -60,8 +60,9 @@ io.on('connection', async (socket) => {
         if(!chatRoom){//If chatRoom doesnt exist make one
             const chat = new ChatModel({//Uploads to database
                 room: room,
-                messages:{ 
-                    sender: username
+                chat:{ 
+                    sender: username,
+                    messages: []
                 }
             });
             await chat.save();
@@ -87,11 +88,11 @@ io.on('connection', async (socket) => {
     socket.on('chat message', async ({ msg, room, username }) => {// grabs submitted room and submitted message
 
         const findRoom = await ChatModel.findOne({ roomId: room });
-        console.log("findRoom =" + findRoom)
+        console.log("findRoom = " + findRoom)
         try {
             if(findRoom){
                 //Adds messages to array object
-                findRoom.messages.push({ sender: username, message: msg, timestamp: new Date() });
+                findRoom.chat.push({ sender: username, messages: msg, timestamp: new Date() });
                 await chatRoom.save();
                 console.log(findRoom);
                 // data.forEach(data => {
