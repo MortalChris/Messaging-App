@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 const ChatRoomModal = mongoose.model('ChatRoom', new mongoose.Schema({
     // Define your data schema here
-    room: { type: String, required: true },
+    room: { type: Object, required: true },
     chat: [{
         sender: { type: String, required: true },
         messages: { type: Array, required: true },
