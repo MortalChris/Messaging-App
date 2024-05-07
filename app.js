@@ -87,13 +87,16 @@ io.on('connection', async (socket) => {
     //Sending a message
     socket.on('chat message', async ({ msg, room, username }) => {// grabs submitted room and submitted message
 
-        const findRoom = await ChatModel.findOne({ roomId: room });
-        console.log("findRoom = " + findRoom)
+        const findRoom = await ChatModel.findOne({ room: room });
+        console.log(room)
+        console.log("chat message socket: findRoom = " + findRoom)
         try {
             if(findRoom){
                 //Adds messages to array object
+
                 findRoom.chat.push({ sender: username, messages: msg, timestamp: new Date() });
-                await chatRoom.save();
+                await findRoom.save();
+                //await findRoom.save();
                 console.log(findRoom);
                 // data.forEach(data => {
                 //     io.to(data.room).emit('chat message', { msg: data.msg, sender: data.sender });
