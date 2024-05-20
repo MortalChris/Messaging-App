@@ -25,14 +25,16 @@
         </div>
         <div id="chat-list-contianer">
             <ul id="chat-list"></ul>
-            <% if (chatRoom.messages) { %>
-                <% chatRoom.messages.forEach(function(message){ %>
+            <% if (chatRoom.chat) { %>
+                <% chatRoom.chat.forEach(function(chat){ %>
                     <ul class="message">
-                        <p><%= message.sender %>:<%= message.message %></p>
-                        <p><%= message.timestamp.toLocaleString() %></p>
+                        <p><%= chat.sender %>:<%= chat.messages %></p>
+                        <p><%= chat.timestamp.toLocaleString() %></p>
                     </ul>
                 <% }) %>
-            <% } %>
+            <% } else { %>
+                <p>Chat has no messages</p>
+            <% }  %>
         </div>
         <div id="form-container">
             <form id="chat-form" action="">
