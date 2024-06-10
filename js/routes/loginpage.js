@@ -52,7 +52,7 @@ loginPage.post("/loginPage", async function(req, res){
 				req.session.username = usersEmail;
                 res.redirect("chat-page");
             } else {
-                res.redirect("login-page");
+                res.redirect("loginPage");
                 console.log("password doesn't match");
             }
         } else { //  if the user doesn't exist 
