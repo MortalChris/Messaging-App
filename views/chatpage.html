@@ -26,7 +26,7 @@
         <div id="chat-list-contianer">
             <ul id="chat-list"></ul>
             <!-- Displays chat messages from mongoDB -->
-            <% if (chatRoom.chat) { %>
+            <% if (chatRoom.chat && chatRoom.chat.length > 0) { %>
                 <% chatRoom.chat.forEach(function(chat){ %>
                     <ul class="message">
                         <p><%= chat.sender %>:<%= chat.messages %></p>
