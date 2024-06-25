@@ -27,6 +27,7 @@ chatPage.use(sessionMiddleware);
 //Import chatroom schema
 const ChatModel = require("../components/chatRoomSchemaModel");
 
+
 //Route
 chatPage.get("/chat-page", async (req, res) => {
     try {
@@ -49,6 +50,56 @@ chatPage.get("/chat-page", async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 
+});
+//create seperate post for room input
+
+// chatPage.post("/room", async (req, res, next) => {
+//     //checks if it already exist
+//     let chatRoom = await ChatModel.findOne({ room: req.body.roomName }).exec();
+//     //if it doesn't create object and save
+//     if (!chatRoom) {//If chatRoom doesnt exist make one
+//         const chat = new ChatModel({//Uploads to database
+//             room: req.body.roomName,
+//             chat: {
+//                 sender: "sessionMiddleware.username",
+//                 messages: []
+//             }
+//         });
+//         await chat.save();
+//         res.status(204).send();
+//     }
+// })
+
+
+chatPage.post("/chat", async (req, res, next) => { 
+    let chatRoom = await ChatModel.findOne({ room: req.body.roomName }).exec();
+    if (!chatRoom) {
+        const chat = new ChatModel({
+            room: "room1",
+            chat: [{
+                sender: "sessionMiddleware.username",
+                messages: req.body.message,
+                timestamp: new Date()
+            }]
+        })
+        const result = await chat.save();
+        res.redirect("chat-page");
+    } else {
+        console.log("FUCKING HELL");
+    }
+
+    // try {
+    //             if(chatRoom){
+    //                 //Adds messages to array object
+    //                 chatRoom.chat.push({ sender: "sessionMiddleware.username", messages: req.body.message, timestamp: new Date() });
+    //                 await chatRoom.save();
+    //                 res.redirect("chat-page");
+    //                 console.log(chatRoom);
+    //             }
+    //         } catch {
+    //             res.status(404).send();
+    //             console.log("An error has occured with submitting room")
+    //         }
 });
 
 
