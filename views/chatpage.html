@@ -9,9 +9,9 @@
 </head>
     <body>
         <div id="modal">
-            <form id="create-room-form" action="">
+            <form id="create-room-form" action="/room" method="POST">
                 <label id="room-name-label" for="room-name-input">Room name</label>
-                <input id="room-name-input" type="text" required>
+                <input id="room-name-input" name="roomName" type="text" required>
                 <button name="submit-room-name">Create</button>
             </form> 
         </div>
@@ -26,6 +26,7 @@
         <div id="chat-list-contianer">
             <ul id="chat-list"></ul>
             <!-- Displays chat messages from mongoDB -->
+            <p>Welcome to the Chat room</p>
             <% if (chatRoom.chat && chatRoom.chat.length > 0) { %>
                 <% chatRoom.chat.forEach(function(chat){ %>
                     <ul class="message">
@@ -38,7 +39,7 @@
             <% }  %>
         </div>
         <div id="form-container">
-            <form id="chat-form" action="">
+            <form id="chat-form" action="/chat" method="POST">
                 <input type="text" id="input" name="message" placeholder="Type your message here" autocomplete="off" required>
                 <button name="send-msg">Send</button>
             </form>
@@ -50,8 +51,8 @@
 
 
 
-        <script src="/socket.io/socket.io.js"></script>
-        <script>
+        <!-- <script src="/socket.io/socket.io.js"></script> -->
+        <!-- <script>
         const socket = io();
 
 
@@ -115,9 +116,9 @@
                 });
                 input.value = '';
             }
-        });
+        }); -->
 
-        // connects typed text to server and displays it
+        <!-- // connects typed text to server and displays it
         // socket.on('chat message', async ({msg, username}) => { //I Don't think this is needed anymore if were just gonna pull from mongodb directly
         //     createMessageDisplayClient(msg, username);
         //     const chatRoom = await ChatRoomModal.findOne({ room: chatRoom.value });
@@ -184,6 +185,6 @@
                         activity.textContent = '';
                     }, 3000);
         });
-        </script>
+        </script> -->
     </body>
 </html>
